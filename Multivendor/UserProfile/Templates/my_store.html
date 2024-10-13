@@ -1,0 +1,63 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{% firstof users.get_full_name users.username %} {% endblock %}
+{% block content %}
+
+    <div class="container mx-auto">
+
+        {% if messages %}
+   
+        {% for message in messages %}
+        <div class= "mt-6 px-4 py-6 bg-teal-400 text-teal-800">
+            {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}
+        </div>
+      
+        {% endfor %}
+    
+        {% endif %}
+       
+        <!-- Grid container to divide page -->
+        <div class="grid grid-cols-6 gap-4">
+            <div class="col-span-1 bg-white p-4 rounded-lg shadow-lg">
+                <a href="{% url 'add_product' %}" class="text-blue-600 hover:text-blue-800 transition-colors duration-300">Add-product
+                </a>
+                <a href="{% url 'my_orders' %}" class="text-blue-600 hover:text-blue-800 transition-colors duration-300">My-orders
+                </a>
+       
+            </div>
+
+
+            <!-- Product List (5/6) -->
+            <div class="col-span-5 bg-white p-6 rounded-lg shadow-lg">
+                
+                <h1 class="mt-6 px-4 py-2 bg-teal-400 text-teal-800 text-center text-semibold "> Dir 
+                {% firstof user.get_full_name user.username %}  Click on product Make<strong> Update </strong>your Products
+                </h1>
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-8">
+                    {% for product in products %}
+                        <a href="{% url 'product_update' product.pk %}">
+                            <div class="bg-gray-200 rounded-lg overflow-hidden">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-48 object-cover object-center group-hover:opacity-75 transition-opacity duration-300">
+                                {% else %}
+                                    <!-- Placeholder image for products with no image -->
+                                    <img src="{% static 'Images/default-placeholder.png' %}" alt="No Image" class="w-full h-48 object-cover object-center group-hover:opacity-75 transition-opacity duration-300">
+                                {% endif %}
+                                <div class="p-4">
+                                    <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ product.name }}</h3>
+                                    <p class="text-xl font-medium text-gray-900">{{ product.initial_sell }}.Bir</p>
+                                </div>
+                            </div>
+                        </a>
+                    {% empty %}
+                        <p>No products available for this user.</p>
+                    {% endfor %}
+                </div>
+        </div>
+    </div>
+
+    
+
+
+{% endblock%}
